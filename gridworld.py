@@ -12,9 +12,10 @@ class GridWorld:
             self.g_pos = np.random.randint(0, self.size, size=2);
             if not np.array_equal(self.g_pos, self.a_pos):
                 break;
+        return self.get_state();
             
     def get_state(self):
-        return self.a_pos.copy().astype(np.float32);
+        return np.concatenate([self.a_pos, self.g_pos]).astype(np.float32)
     
     def step(self, dec):
         #row change, col change
@@ -28,14 +29,14 @@ class GridWorld:
         
         if 0 <= new_pos[0] < self.size and 0 <= new_pos[1] < self.size:
             self.a_pos = new_pos;
-            reward = -1;
+            reward = -1 / self.size;
             done = False;
         else:
             reward = -5;
             done = False;
         
         if np.array_equal(self.a_pos, self.g_pos):
-            reward = 10;
+            reward = 4 * self.size;
             done = True;
         
         return self.get_state(), reward, done;
